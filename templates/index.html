@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weed Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <h3>🌿 Automated Weed Detection</h3>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="container">
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <button>Detect</button>
+    </form>
+
+    {% if result %}
+        <h3>Detection Result</h3>
+        <img src="{{ url_for('static', filename='output.jpg') }}?v={{ range(1,9999)|random }}">
+    {% endif %}
+</div>
+
+</body>
+</html>
