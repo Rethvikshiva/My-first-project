@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+*.egg-info/
+
+# Flask
+instance/
+.flaskenv
+
+# Project runtime files (user uploads and generated output)
+uploads/
+static/output.jpg
+
+# Environment secrets
+.env
+
+# OS/IDE
+.DS_Store
+.idea/
+.vscode/

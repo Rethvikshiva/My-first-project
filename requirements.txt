@@ -1,7 +1,4 @@
 flask
 opencv-python
 numpy
-torch
-torchvision
-ultralytics
 pillow

@@ -2,9 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import cv2
 import numpy as np
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = "weed_secret_key"
+app.secret_key = os.environ.get("SECRET_KEY", "dev_only_change_me")
+
+# Demo credentials — replace with a real user store before any real deployment
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin")
 
 UPLOAD_FOLDER = "uploads"
 STATIC_FOLDER = "static"
@@ -16,7 +21,7 @@ os.makedirs(STATIC_FOLDER, exist_ok=True)
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        if request.form["username"] == "admin" and request.form["password"] == "admin":
+        if request.form["username"] == ADMIN_USERNAME and request.form["password"] == ADMIN_PASSWORD:
             session["user"] = "admin"
             return redirect(url_for("home"))
     return render_template("login.html")
@@ -35,7 +40,8 @@ def home():
 
     if request.method == "POST":
         file = request.files["image"]
-        path = os.path.join(UPLOAD_FOLDER, file.filename)
+        filename = secure_filename(file.filename)
+        path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(path)
 
         img = cv2.imread(path)
@@ -70,4 +76,7 @@ def home():
     return render_template("index.html", result=False)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Set FLASK_DEBUG=1 in your environment for local debugging only.
+    # Never run with debug=True in production.
+    debug_mode = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(debug=debug_mode)
